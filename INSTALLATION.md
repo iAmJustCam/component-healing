@@ -16,14 +16,34 @@ This will:
 
 ## After Installation
 
-Once installed, you can use the two simple commands:
+Once installed, you can use these simple commands:
 
 ```bash
-# Check component health
-npm run health
+# Check full project alignment
+npm run stack:check
 
-# Fix all issues
-npm run heal
+# Fix ALL alignment issues
+npm run stack:align
+```
+
+### Technology-Specific Commands
+
+```bash
+# Check specific areas
+npm run component:check
+npm run project:check
+npm run react:check
+npm run next:check
+npm run tailwind:check
+npm run a11y:check
+
+# Fix specific areas
+npm run component:fix
+npm run project:fix
+npm run react:fix
+npm run next:fix
+npm run tailwind:fix
+npm run a11y:fix
 ```
 
 See [QUICK-START.md](https://github.com/iAmJustCam/component-healing/blob/main/QUICK-START.md) for more usage information.

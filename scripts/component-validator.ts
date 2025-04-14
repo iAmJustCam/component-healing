@@ -126,39 +126,47 @@ const validateAll = argv.all || false;
 const comprehensive = argv.comprehensive || false;
 const createUtils = argv['create-utils'] || false;
 
+// Debug flags if needed
+// console.log("Flags:", {
+//   dir: componentDir, component, pattern, doFix, report: generateReport,
+//   json: outputJson, output: outputFile, tailwind: focusTailwind, server: focusServer,
+//   next: focusNext, accessibility: focusAccessibility, componentOnly, projectStructure,
+//   all: validateAll, comprehensive, createUtils
+// });
+
 // Configure validation options
-const validationOptions: ValidationOptions = validateAll || comprehensive
+const validationOptions: ValidationOptions = comprehensive 
   ? { comprehensive: true }
   : {
       // React 19 validation
-      expectServerComponents: focusServer,
-      requireReact19Features: focusServer,
-      checkServerOnlyCode: focusServer,
-      validateModernHooks: focusServer,
-      validateActionsPattern: focusServer,
+      expectServerComponents: validateAll || focusServer,
+      requireReact19Features: validateAll || focusServer,
+      checkServerOnlyCode: validateAll || focusServer,
+      validateModernHooks: validateAll || focusServer,
+      validateActionsPattern: validateAll || focusServer,
       
       // Component structure
-      validateDisplayName: componentOnly || true,
-      validatePropsInterface: componentOnly || true,
-      validateForwardRef: componentOnly || true,
+      validateDisplayName: validateAll || componentOnly || !focusServer && !focusTailwind && !focusNext && !focusAccessibility,
+      validatePropsInterface: validateAll || componentOnly || !focusServer && !focusTailwind && !focusNext && !focusAccessibility,
+      validateForwardRef: validateAll || componentOnly || !focusServer && !focusTailwind && !focusNext && !focusAccessibility,
       
       // Accessibility
-      validateDataTestId: focusAccessibility || true,
-      validateAriaAttributes: focusAccessibility || focusTailwind,
-      validateSemanticHTML: focusAccessibility || focusTailwind,
+      validateDataTestId: validateAll || focusAccessibility || !focusServer && !focusTailwind && !focusNext && !componentOnly,
+      validateAriaAttributes: validateAll || focusAccessibility || !focusServer && !focusTailwind && !focusNext && !componentOnly,
+      validateSemanticHTML: validateAll || focusAccessibility || !focusServer && !focusTailwind && !focusNext && !componentOnly,
       
       // Tailwind validation
-      checkTailwindPatterns: focusTailwind,
-      validateCVA: focusTailwind,
-      validateColorSystem: focusTailwind,
-      validateClassMerging: focusTailwind,
+      checkTailwindPatterns: validateAll || focusTailwind,
+      validateCVA: validateAll || focusTailwind,
+      validateColorSystem: validateAll || focusTailwind,
+      validateClassMerging: validateAll || focusTailwind,
       
       // Testing
-      validateGhostClasses: true,
+      validateGhostClasses: validateAll || componentOnly || !focusServer && !focusTailwind && !focusNext && !focusAccessibility,
       
       // Next.js validation
-      validateAppRouter: focusNext,
-      validateMetadata: focusNext
+      validateAppRouter: validateAll || focusNext,
+      validateMetadata: validateAll || focusNext
     };
 
 // Create utils file if requested

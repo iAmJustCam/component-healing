@@ -26,6 +26,11 @@ CREATE_UTILS=false
 OUTPUT_FILE=""
 COMPREHENSIVE=false
 
+# Directory parameter
+DIR=""
+PATTERN=""
+JSON_OUTPUT=false
+
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -35,6 +40,16 @@ while [[ "$#" -gt 0 ]]; do
       shift
       COMPONENT="$1" 
       ;;
+    --dir=*) DIR="${1#*=}" ;;
+    --dir) 
+      shift
+      DIR="$1" 
+      ;;
+    --pattern=*) PATTERN="${1#*=}" ;;
+    --pattern) 
+      shift
+      PATTERN="$1" 
+      ;;
     
     # Action flags
     --fix) FIX_MODE=true ;;
@@ -42,6 +57,7 @@ while [[ "$#" -gt 0 ]]; do
     --report) REPORT_ONLY=true ;;
     --create-utils) CREATE_UTILS=true ;;
     --output=*) OUTPUT_FILE="${1#*=}" ;;
+    --json) JSON_OUTPUT=true ;;
     
     # Validation scope flags
     --all) VALIDATE_ALL=true ;;
@@ -55,6 +71,34 @@ while [[ "$#" -gt 0 ]]; do
     --component-only) COMPONENT_ONLY=true ;;
     --accessibility) ACCESSIBILITY_ONLY=true ;;
     
+    # Help
+    --help|-h) 
+      echo "Tech Stack Alignment System"
+      echo "Usage: bash tech-stack-validator.sh [options]"
+      echo ""
+      echo "Options:"
+      echo "  --component=NAME      Validate a specific component"
+      echo "  --dir=PATH            Directory to search for components (default: src/components/ui)"
+      echo "  --pattern=GLOB        Glob pattern to match files (default: **/*.tsx)"
+      echo "  --fix                 Apply fixes to issues found"
+      echo "  --yes                 Auto-approve all fixes"
+      echo "  --report              Generate a detailed report"
+      echo "  --json                Output in JSON format"
+      echo "  --output=FILE         Write output to a file"
+      echo "  --create-utils        Create utility files if missing"
+      echo ""
+      echo "Validation Scopes:"
+      echo "  --comprehensive       Enable all checks (recommended)"
+      echo "  --all                 Enable basic checks"
+      echo "  --component-only      Focus only on component structure"
+      echo "  --project-structure   Focus on project structure"
+      echo "  --react               Focus on React 19 patterns"
+      echo "  --next                Focus on Next.js 15 patterns"
+      echo "  --tailwind            Focus on Tailwind CSS v4 patterns"
+      echo "  --accessibility       Focus on accessibility features"
+      exit 0
+      ;;
+    
     # Error handling
     *) echo "Unknown parameter: $1"; exit 1 ;;
   esac
@@ -67,33 +111,62 @@ echo "----------------------------------------"
 # Build command for validation
 CMD="npx tsx scripts/component-validator.ts"
 
+# Component and directory parameters
 if [ -n "$COMPONENT" ]; then
   CMD="$CMD --component=$COMPONENT"
 fi
 
-if [ "$REPORT_ONLY" = true ]; then
-  CMD="$CMD --report"
-  if [ -n "$OUTPUT_FILE" ]; then
-    CMD="$CMD --output=$OUTPUT_FILE"
-  fi
+if [ -n "$DIR" ]; then
+  CMD="$CMD --dir=$DIR"
 fi
 
-# Set validation scope
+if [ -n "$PATTERN" ]; then
+  CMD="$CMD --pattern=$PATTERN"
+fi
+
+# Output options
+if [ "$REPORT_ONLY" = true ]; then
+  CMD="$CMD --report"
+fi
+
+if [ -n "$OUTPUT_FILE" ]; then
+  CMD="$CMD --output=$OUTPUT_FILE"
+fi
+
+if [ "$JSON_OUTPUT" = true ]; then
+  CMD="$CMD --json"
+fi
+
+# Set validation scope - add flags
 if [ "$COMPREHENSIVE" = true ]; then
   CMD="$CMD --comprehensive"
-elif [ "$VALIDATE_ALL" = true ]; then
+fi
+
+if [ "$VALIDATE_ALL" = true ]; then
   CMD="$CMD --all"
-elif [ "$TAILWIND_ONLY" = true ]; then
+fi
+
+if [ "$TAILWIND_ONLY" = true ]; then
   CMD="$CMD --tailwind"
-elif [ "$REACT_ONLY" = true ]; then
-  CMD="$CMD --server"
-elif [ "$NEXT_ONLY" = true ]; then
+fi
+
+if [ "$REACT_ONLY" = true ]; then
+  CMD="$CMD --react"
+fi
+
+if [ "$NEXT_ONLY" = true ]; then
   CMD="$CMD --next"
-elif [ "$PROJECT_ONLY" = true ]; then
+fi
+
+if [ "$PROJECT_ONLY" = true ]; then
   CMD="$CMD --project-structure"
-elif [ "$COMPONENT_ONLY" = true ]; then
-  CMD="$CMD --component-only" 
-elif [ "$ACCESSIBILITY_ONLY" = true ]; then
+fi
+
+if [ "$COMPONENT_ONLY" = true ]; then
+  CMD="$CMD --component-only"
+fi
+
+if [ "$ACCESSIBILITY_ONLY" = true ]; then
   CMD="$CMD --accessibility"
 fi
 

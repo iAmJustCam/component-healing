@@ -3,6 +3,12 @@
 # https://github.com/iAmJustCam/component-healing
 
 set -e  # Exit on error
+AUTO_YES=false
+
+# Check for --yes flag
+if [[ "$*" == *"--yes"* ]] || [[ "$*" == *"-y"* ]]; then
+  AUTO_YES=true
+fi
 
 echo "🔧 Installing Tech Stack Alignment System..."
 
@@ -64,11 +70,26 @@ Option 2: Manually add these scripts to your package.json:
 }
 "
 
-# Try to run the script helper automatically
+# Update package.json automatically with user confirmation
 if command -v node &> /dev/null; then
-  echo "🔄 Cleaning up package.json and adding new scripts..."
-  echo "   This will remove outdated/conflicting scripts and add new ones."
-  node add-scripts.js || echo "⚠️ Couldn't automatically update scripts. Please run 'node add-scripts.js' manually."
+  if [ "$AUTO_YES" = true ]; then
+    echo "✅ Auto-updating package.json..."
+    node add-scripts.js
+  else
+    echo ""
+    echo "⚠️  WARNING: This will update your package.json by:"
+    echo "   - Removing outdated scripts (heal:*, fix:*, audit:*, etc.)"
+    echo "   - Adding new tech stack alignment scripts (stack:*)"
+    echo ""
+    read -p "🔄 Continue with package.json update? (y/N): " confirm
+    
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+      echo "✅ Updating package.json..."
+      node add-scripts.js
+    else
+      echo "⚠️ Skipped package.json update. Run 'node add-scripts.js' manually when ready."
+    fi
+  fi
 else
   echo "⚠️ Node.js not found. Please manually update your package.json:"
   echo "1. Remove old scripts like: heal, heal:*, fix:*, audit:*, health, etc."

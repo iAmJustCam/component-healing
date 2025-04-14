@@ -8,6 +8,16 @@ Copy and paste this command into your terminal inside your project directory:
 curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash
 ```
 
+This will prompt you to confirm before updating your package.json scripts.
+
+### Automatic Installation (No Prompts)
+
+For CI environments or when you want to skip all prompts:
+
+```bash
+curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash -s -- --yes
+```
+
 This will:
 1. Download all necessary files
 2. Set up the directory structure

@@ -14,15 +14,23 @@ This will:
 3. Try to add scripts to your package.json automatically
 4. Install required dependencies
 
-## Adding Scripts to package.json
+## Updating Scripts in package.json
 
-The installation script will try to automatically add the required scripts to your package.json. If it fails, you have two options:
+The installation script will automatically clean up your package.json by:
+1. Removing any outdated/conflicting scripts
+2. Adding the new tech stack alignment scripts
+
+This ensures you won't have duplicate or conflicting scripts in your package.json.
 
 ### Option 1: Run the helper script (recommended)
 
 ```bash
 node add-scripts.js
 ```
+
+This will:
+- Remove old scripts like `heal`, `heal:*`, `fix:*`, `audit:*`, etc.
+- Add all the new tech stack alignment scripts
 
 ### Option 2: Manually add these scripts to your package.json
 

@@ -13,7 +13,7 @@ echo "✅ Created directory structure"
 # Download files
 echo "📥 Downloading files..."
 curl -s -o scripts/tech-stack-validator.sh https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/component-healer.sh
-curl -s -o scripts/validator-cli.ts https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/component-validator.ts
+curl -s -o scripts/component-validator.ts https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/component-validator.ts
 curl -s -o scripts/modules/unified-validator.ts https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/modules/unified-validator.ts
 curl -s -o QUICK-START.md https://raw.githubusercontent.com/iAmJustCam/component-healing/main/QUICK-START.md
 curl -s -o add-scripts.js https://raw.githubusercontent.com/iAmJustCam/component-healing/main/add-scripts.js
@@ -66,10 +66,13 @@ Option 2: Manually add these scripts to your package.json:
 
 # Try to run the script helper automatically
 if command -v node &> /dev/null; then
-  echo "🔄 Attempting to add scripts to package.json automatically..."
-  node add-scripts.js || echo "⚠️ Couldn't automatically add scripts. Please use one of the methods above."
+  echo "🔄 Cleaning up package.json and adding new scripts..."
+  echo "   This will remove outdated/conflicting scripts and add new ones."
+  node add-scripts.js || echo "⚠️ Couldn't automatically update scripts. Please run 'node add-scripts.js' manually."
 else
-  echo "⚠️ Node.js not found. Please manually add the scripts to your package.json."
+  echo "⚠️ Node.js not found. Please manually update your package.json:"
+  echo "1. Remove old scripts like: heal, heal:*, fix:*, audit:*, health, etc."
+  echo "2. Add the new tech stack alignment scripts shown above"
 fi
 
 echo "

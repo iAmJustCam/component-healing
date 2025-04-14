@@ -16,42 +16,11 @@ curl -s -o scripts/tech-stack-validator.sh https://raw.githubusercontent.com/iAm
 curl -s -o scripts/validator-cli.ts https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/component-validator.ts
 curl -s -o scripts/modules/unified-validator.ts https://raw.githubusercontent.com/iAmJustCam/component-healing/main/scripts/modules/unified-validator.ts
 curl -s -o QUICK-START.md https://raw.githubusercontent.com/iAmJustCam/component-healing/main/QUICK-START.md
+curl -s -o add-scripts.js https://raw.githubusercontent.com/iAmJustCam/component-healing/main/add-scripts.js
 
 # Make shell script executable
 chmod +x scripts/tech-stack-validator.sh
 echo "✅ Made scripts executable"
-
-# Add npm scripts
-echo "📝 Adding scripts to package.json..."
-
-# Try to use npm pkg command if available
-if command -v npm &> /dev/null; then
-  # Core simple commands
-  npm pkg set "scripts.stack:check"="bash scripts/tech-stack-validator.sh --comprehensive --report" || true
-  npm pkg set "scripts.stack:align"="bash scripts/tech-stack-validator.sh --comprehensive --fix --yes" || true
-  
-  # Component specific commands
-  npm pkg set "scripts.component:check"="bash scripts/tech-stack-validator.sh --component-only --report" || true
-  npm pkg set "scripts.component:fix"="bash scripts/tech-stack-validator.sh --component-only --fix --yes" || true
-  
-  # Project structure commands
-  npm pkg set "scripts.project:check"="bash scripts/tech-stack-validator.sh --project-structure --report" || true
-  npm pkg set "scripts.project:fix"="bash scripts/tech-stack-validator.sh --project-structure --fix --yes" || true
-  
-  # Tech-specific commands
-  npm pkg set "scripts.react:check"="bash scripts/tech-stack-validator.sh --react --report" || true
-  npm pkg set "scripts.react:fix"="bash scripts/tech-stack-validator.sh --react --fix --yes" || true
-  npm pkg set "scripts.next:check"="bash scripts/tech-stack-validator.sh --next --report" || true
-  npm pkg set "scripts.next:fix"="bash scripts/tech-stack-validator.sh --next --fix --yes" || true
-  npm pkg set "scripts.tailwind:check"="bash scripts/tech-stack-validator.sh --tailwind --report" || true
-  npm pkg set "scripts.tailwind:fix"="bash scripts/tech-stack-validator.sh --tailwind --fix --yes" || true
-  npm pkg set "scripts.a11y:check"="bash scripts/tech-stack-validator.sh --accessibility --report" || true
-  npm pkg set "scripts.a11y:fix"="bash scripts/tech-stack-validator.sh --accessibility --fix --yes" || true
-fi
-
-echo "⚠️ Make sure your package.json has these scripts:
-  \"stack:check\": \"bash scripts/tech-stack-validator.sh --comprehensive --report\",
-  \"stack:align\": \"bash scripts/tech-stack-validator.sh --comprehensive --fix --yes\""
 
 # Install dependencies
 echo "📦 Installing dependencies..."
@@ -62,22 +31,54 @@ else
   echo "npm install --save-dev glob tsx clsx tailwind-merge class-variance-authority"
 fi
 
+# Display instructions for package.json scripts
+echo "
+🚨 IMPORTANT - Add commands to package.json:
+
+Option 1: Run the helper script (recommended):
+node add-scripts.js
+
+Option 2: Manually add these scripts to your package.json:
+
+\"scripts\": {
+  \"stack:check\": \"bash scripts/tech-stack-validator.sh --comprehensive --report\",
+  \"stack:align\": \"bash scripts/tech-stack-validator.sh --comprehensive --fix --yes\",
+  
+  \"component:check\": \"bash scripts/tech-stack-validator.sh --component-only --report\",
+  \"component:fix\": \"bash scripts/tech-stack-validator.sh --component-only --fix --yes\",
+  
+  \"project:check\": \"bash scripts/tech-stack-validator.sh --project-structure --report\",
+  \"project:fix\": \"bash scripts/tech-stack-validator.sh --project-structure --fix --yes\",
+  
+  \"react:check\": \"bash scripts/tech-stack-validator.sh --react --report\",
+  \"react:fix\": \"bash scripts/tech-stack-validator.sh --react --fix --yes\",
+  
+  \"next:check\": \"bash scripts/tech-stack-validator.sh --next --report\",
+  \"next:fix\": \"bash scripts/tech-stack-validator.sh --next --fix --yes\",
+  
+  \"tailwind:check\": \"bash scripts/tech-stack-validator.sh --tailwind --report\",
+  \"tailwind:fix\": \"bash scripts/tech-stack-validator.sh --tailwind --fix --yes\",
+  
+  \"a11y:check\": \"bash scripts/tech-stack-validator.sh --accessibility --report\",
+  \"a11y:fix\": \"bash scripts/tech-stack-validator.sh --accessibility --fix --yes\"
+}
+"
+
+# Try to run the script helper automatically
+if command -v node &> /dev/null; then
+  echo "🔄 Attempting to add scripts to package.json automatically..."
+  node add-scripts.js || echo "⚠️ Couldn't automatically add scripts. Please use one of the methods above."
+else
+  echo "⚠️ Node.js not found. Please manually add the scripts to your package.json."
+fi
+
 echo "
 🎉 Tech Stack Alignment System installed successfully!
 
-👉 Check full project alignment:
-   npm run stack:check
+🚀 After adding scripts to package.json, you can use:
 
-👉 Fix all alignment issues:
-   npm run stack:align
+  npm run stack:check    # Check full project alignment
+  npm run stack:align    # Fix all alignment issues
 
-💡 Other useful commands:
-   npm run component:check    # Check only components
-   npm run project:check      # Check project structure
-   npm run react:check        # Check React 19 alignment
-   npm run next:check         # Check Next.js 15 alignment
-   npm run tailwind:check     # Check Tailwind CSS v4 alignment
-   npm run a11y:check         # Check accessibility
-
-📚 See QUICK-START.md for more information
+💡 See QUICK-START.md for more information about all available commands
 "

@@ -13,7 +13,7 @@ chmod +x install.sh
 # Or for CI environments (auto-yes, no prompts)
 curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash -s -- --yes
 
-# Check full project alignment
+# Check full project alignment (components + project structure)
 npm run stack:check
 
 # Fix ALL alignment issues
@@ -22,47 +22,35 @@ npm run stack:align
 
 ## Features
 
-- **Comprehensive Validation**: Checks your entire project against 2025 best practices
+- **Comprehensive Validation**: Validates both components and project structure
 - **Automatic Fixing**: Self-heals issues with smart code transformations
+- **Detailed Reporting**: Component and project health scores with specific recommendations
 - **Developer Friendly**: Simple commands with clear reporting
 - **Tech Stack Coverage**:
-  - ✅ **React 19**: Server Components, modern hooks, Actions pattern
-  - ✅ **Next.js 15**: App Router, metadata, routing patterns
-  - ✅ **Tailwind CSS v4**: Modern patterns, class merging, color system
+  - ✅ **React 19**: Server Components, modern hooks, Actions pattern, dependency versions
+  - ✅ **Next.js 15**: App Router structure, metadata, routing patterns, configuration
+  - ✅ **Tailwind CSS v4**: Modern patterns, class merging, color system, utilities
   - ✅ **Accessibility**: ARIA attributes, semantic HTML, testing IDs
-  - ✅ **Project Structure**: Directory structure, file organization, naming conventions
+  - ✅ **TypeScript**: Configuration, strict mode, ESM modules
+  - ✅ **CSS**: Organization, modules, global styles
+  - ✅ **Project Structure**: Directory organization, file structure, config files
 
 ## What Gets Validated
 
-### Project Structure
-- Directory organization follows modern patterns
-- File naming conventions are consistent
-- Configuration files use recommended settings
-- Dependencies are properly managed
+### Component Health
+- Component structure and patterns
+- Tailwind CSS usage and best practices
+- Accessibility features
+- Server/Client component boundaries
+- TypeScript interfaces and typing
 
-### React 19
-- Server Components architecture is properly implemented
-- Modern hooks (useOptimistic, useFormStatus) are used correctly
-- Actions pattern is used for forms
-- Component structure follows best practices (displayName, props interfaces, forwardRef)
-
-### Next.js 15
-- App Router structure is properly implemented
-- Metadata and SEO optimizations are in place
-- Routing patterns follow recommendations
-- Data fetching strategies are optimized
-
-### Tailwind CSS v4
-- Class merging with cn() utility is used
-- Modern color system with opacity syntax is applied
-- Component variants with Class Variance Authority are implemented
-- Modern naming conventions are followed
-
-### Accessibility
-- ARIA attributes are present on interactive elements
-- Semantic HTML is used appropriately
-- Test IDs are included for component testing
-- Keyboard navigation is properly supported
+### Project Structure Health
+- Next.js App Router setup
+- React and dependencies versions
+- Tailwind CSS configuration
+- TypeScript configuration
+- CSS organization
+- ESM and modern JavaScript setup
 
 ## Documentation
 

@@ -14,7 +14,7 @@ const scriptsToRemove = [
   // Old healing scripts
   'heal', 'heal:dry', 'heal:fix', 'heal:component', 'heal:ci', 'heal:ci:fix',
   'heal:project', 'heal:tailwind', 'heal:react19',
-  'fix:tailwind', 'fix:react19', 'fix:interface', 'fix:exports',
+  'fix:tailwind', 'fix:react19', 'fix:interface', 'fix:exports', 
   'audit', 'audit:fix', 'audit:report', 'audit:component', 'audit:auto',
   
   // Transitional scripts from first iteration

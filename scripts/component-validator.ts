@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Component Validator CLI
+ * Tech Stack Alignment System CLI
  * 
- * A unified command-line tool for validating and fixing React components
+ * A comprehensive command-line tool for validating and fixing entire projects
  * according to modern best practices for React 19, Next.js 15, and Tailwind CSS v4.
+ * Checks both components and overall project structure.
  */
 
 import path from 'path';
@@ -28,10 +29,15 @@ const argv = yargsParser(process.argv.slice(2), {
     'tailwind',
     'react19',
     'server',
+    'react',
+    'next',
     'help',
     'all',
     'create-utils',
-    'comprehensive'
+    'comprehensive',
+    'component-only',
+    'project-structure',
+    'accessibility'
   ],
   string: ['component', 'dir', 'pattern', 'output'],
   alias: {
@@ -54,11 +60,11 @@ const argv = yargsParser(process.argv.slice(2), {
 // Show help if requested
 if (argv.help) {
   console.log(`
-${chalk.bold('Component Validator')}
-A modern validation and fixing tool for React components
+${chalk.bold('Tech Stack Alignment System')}
+A modern validation and fixing tool for React 19, Next.js 15, and Tailwind CSS v4 projects
 
 ${chalk.yellow('Usage:')}
-  npx ts-node component-validator.ts [options]
+  npx tsx component-validator.ts [options]
 
 ${chalk.yellow('Options:')}
   ${chalk.cyan('-c, --component')}    Validate a specific component
@@ -68,25 +74,36 @@ ${chalk.yellow('Options:')}
   ${chalk.cyan('-r, --report')}       Generate detailed report
   ${chalk.cyan('-j, --json')}         Output results as JSON
   ${chalk.cyan('-o, --output')}       Output file for report (default: stdout)
+  
+${chalk.yellow('Validation Scopes:')}
+  ${chalk.cyan('-a, --all')}          Enable all basic validators
+  ${chalk.cyan('-m, --comprehensive')} Enable comprehensive validation (all 2025 best practices)
+  ${chalk.cyan('--component-only')}   Focus on component structure validation
+  ${chalk.cyan('--project-structure')} Focus on project structure validation
+  
+${chalk.yellow('Technology-specific:')}
   ${chalk.cyan('-t, --tailwind')}     Focus on Tailwind CSS v4 validation
   ${chalk.cyan('-s, --server')}       Focus on Server Component validation
-  ${chalk.cyan('-a, --all')}          Enable all validators
-  ${chalk.cyan('-m, --comprehensive')} Enable comprehensive validation (all checks)
+  ${chalk.cyan('--react')}            Focus on React 19 validation
+  ${chalk.cyan('--next')}             Focus on Next.js 15 validation
+  ${chalk.cyan('--accessibility')}    Focus on accessibility validation
+  
+${chalk.yellow('Utilities:')}  
   ${chalk.cyan('-u, --create-utils')} Create utils.ts with cn() utility
   ${chalk.cyan('-h, --help')}         Show this help message
 
 ${chalk.yellow('Examples:')}
   # Validate all components in the default directory
-  npx ts-node component-validator.ts
+  npx tsx component-validator.ts
 
   # Validate a specific component and fix issues
-  npx ts-node component-validator.ts --component=Button --fix
+  npx tsx component-validator.ts --component=Button --fix
 
-  # Validate for Tailwind CSS issues
-  npx ts-node component-validator.ts --tailwind
+  # Validate only Tailwind CSS issues
+  npx tsx component-validator.ts --tailwind
 
-  # Generate a report for all components
-  npx ts-node component-validator.ts --all --report --output=report.txt
+  # Generate a comprehensive report for the entire project
+  npx tsx component-validator.ts --comprehensive --report
   `);
   process.exit(0);
 }
@@ -100,7 +117,11 @@ const generateReport = argv.report || false;
 const outputJson = argv.json || false;
 const outputFile = argv.output || '';
 const focusTailwind = argv.tailwind || false;
-const focusServer = argv.server || false;
+const focusServer = argv.server || argv.react || false;
+const focusNext = argv.next || false;
+const focusAccessibility = argv.accessibility || false;
+const componentOnly = argv['component-only'] || false;
+const projectStructure = argv['project-structure'] || false;
 const validateAll = argv.all || false;
 const comprehensive = argv.comprehensive || false;
 const createUtils = argv['create-utils'] || false;
@@ -117,14 +138,14 @@ const validationOptions: ValidationOptions = validateAll || comprehensive
       validateActionsPattern: focusServer,
       
       // Component structure
-      validateDisplayName: true,
-      validatePropsInterface: true,
-      validateForwardRef: true,
+      validateDisplayName: componentOnly || true,
+      validatePropsInterface: componentOnly || true,
+      validateForwardRef: componentOnly || true,
       
       // Accessibility
-      validateDataTestId: true,
-      validateAriaAttributes: focusTailwind,
-      validateSemanticHTML: focusTailwind,
+      validateDataTestId: focusAccessibility || true,
+      validateAriaAttributes: focusAccessibility || focusTailwind,
+      validateSemanticHTML: focusAccessibility || focusTailwind,
       
       // Tailwind validation
       checkTailwindPatterns: focusTailwind,
@@ -136,8 +157,8 @@ const validationOptions: ValidationOptions = validateAll || comprehensive
       validateGhostClasses: true,
       
       // Next.js validation
-      validateAppRouter: focusServer,
-      validateMetadata: focusServer
+      validateAppRouter: focusNext,
+      validateMetadata: focusNext
     };
 
 // Create utils file if requested
@@ -146,7 +167,7 @@ if (createUtils) {
 }
 
 // Start validation process
-console.log(chalk.blue.bold('\n🧠 Component Validator\n'));
+console.log(chalk.blue.bold('\n🧠 Tech Stack Alignment System\n'));
 
 // Validate the components
 let results;

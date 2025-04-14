@@ -37,57 +37,33 @@ else
   echo "npm install --save-dev glob tsx clsx tailwind-merge class-variance-authority"
 fi
 
-# Display instructions for package.json scripts
-echo "
-🚨 IMPORTANT - Add commands to package.json:
-
-Option 1: Run the helper script (recommended):
-node add-scripts.js
-
-Option 2: Manually add these scripts to your package.json:
-
-\"scripts\": {
-  \"stack:check\": \"bash scripts/tech-stack-validator.sh --comprehensive --report\",
-  \"stack:align\": \"bash scripts/tech-stack-validator.sh --comprehensive --fix --yes\",
-  
-  \"component:check\": \"bash scripts/tech-stack-validator.sh --component-only --report\",
-  \"component:fix\": \"bash scripts/tech-stack-validator.sh --component-only --fix --yes\",
-  
-  \"project:check\": \"bash scripts/tech-stack-validator.sh --project-structure --report\",
-  \"project:fix\": \"bash scripts/tech-stack-validator.sh --project-structure --fix --yes\",
-  
-  \"react:check\": \"bash scripts/tech-stack-validator.sh --react --report\",
-  \"react:fix\": \"bash scripts/tech-stack-validator.sh --react --fix --yes\",
-  
-  \"next:check\": \"bash scripts/tech-stack-validator.sh --next --report\",
-  \"next:fix\": \"bash scripts/tech-stack-validator.sh --next --fix --yes\",
-  
-  \"tailwind:check\": \"bash scripts/tech-stack-validator.sh --tailwind --report\",
-  \"tailwind:fix\": \"bash scripts/tech-stack-validator.sh --tailwind --fix --yes\",
-  
-  \"a11y:check\": \"bash scripts/tech-stack-validator.sh --accessibility --report\",
-  \"a11y:fix\": \"bash scripts/tech-stack-validator.sh --accessibility --fix --yes\"
-}
-"
+# Important - handle terminal input properly when piped
+exec < /dev/tty || true
 
 # Update package.json automatically with user confirmation
 if command -v node &> /dev/null; then
+  echo ""
+  echo "⚠️  WARNING: This will update your package.json by:"
+  echo "   - Removing outdated scripts (heal:*, fix:*, audit:*, etc.)"
+  echo "   - Adding new tech stack alignment scripts (stack:*)"
+  echo ""
+  
   if [ "$AUTO_YES" = true ]; then
     echo "✅ Auto-updating package.json..."
     node add-scripts.js
   else
-    echo ""
-    echo "⚠️  WARNING: This will update your package.json by:"
-    echo "   - Removing outdated scripts (heal:*, fix:*, audit:*, etc.)"
-    echo "   - Adding new tech stack alignment scripts (stack:*)"
-    echo ""
-    read -p "🔄 Continue with package.json update? (y/N): " confirm
-    
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
-      echo "✅ Updating package.json..."
-      node add-scripts.js
+    # Try to read from terminal directly
+    if [ -t 0 ]; then
+      read -p "🔄 Continue with package.json update? (y/N): " confirm
+      if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        echo "✅ Updating package.json..."
+        node add-scripts.js
+      else
+        echo "⚠️ Skipped package.json update. Run 'node add-scripts.js' manually when ready."
+      fi
     else
-      echo "⚠️ Skipped package.json update. Run 'node add-scripts.js' manually when ready."
+      echo "⚠️ Running in non-interactive mode. Use '--yes' flag for automatic updates."
+      echo "   For now, run 'node add-scripts.js' manually to update package.json."
     fi
   fi
 else

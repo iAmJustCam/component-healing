@@ -1,16 +1,25 @@
 # Installation Guide
 
-## One-Line Installation
+## Installation Options
 
-Copy and paste this command into your terminal inside your project directory:
+### Option 1: Download and Run (Interactive, Recommended)
+
+For the best interactive experience, download the script first and then run it:
 
 ```bash
-curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash
+# Step 1: Download the install script
+curl -s -o install.sh https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh
+
+# Step 2: Make it executable
+chmod +x install.sh
+
+# Step 3: Run it 
+./install.sh
 ```
 
 This will prompt you to confirm before updating your package.json scripts.
 
-### Automatic Installation (No Prompts)
+### Option 2: One-Line Installation (Auto-Yes)
 
 For CI environments or when you want to skip all prompts:
 

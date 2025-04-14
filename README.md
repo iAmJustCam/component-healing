@@ -5,10 +5,12 @@ Modern tech stack alignment system for React 19, Next.js 15, and Tailwind CSS v4
 ## Quick Start
 
 ```bash
-# Install with one line (will prompt before updating package.json)
-curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash
+# Install (interactive method)
+curl -s -o install.sh https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh
+chmod +x install.sh
+./install.sh
 
-# Or install with auto-yes for CI environments (no prompts)
+# Or for CI environments (auto-yes, no prompts)
 curl -s https://raw.githubusercontent.com/iAmJustCam/component-healing/main/install.sh | bash -s -- --yes
 
 # Check full project alignment
